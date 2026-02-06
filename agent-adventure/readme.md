@@ -12,6 +12,24 @@ To boot up an ActiveMQ Artemis instance with Podman:
 podman run --detach --name artemis -p 61616:61616 -p 8161:8161 -p 5672:5672 --rm apache/activemq-artemis:latest-alpine
 ```
 
+Can monitor broker at http://localhost:8161/console/login
+
+### Run Ollama locally
+
+```
+podman run -d -v ollama:/root/.ollama -p 11434:11434 --name ollama ollama/ollama
+podman exec -it ollama ollama run granite4:1b
+```
+
+Or, to install and run in Fedora:
+
+```
+sudo dnf install ollama
+ollama serve
+ollama run granite4:1b
+```
+
+
 ### Enter prompts.
 
 ```

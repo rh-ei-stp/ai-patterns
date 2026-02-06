@@ -13,7 +13,7 @@
 
 - [ ] Externalize configuration for LangChain4J Agent bean
 
-- [ ] Externalize system prompt
+- [ ] Externalize system prompt(s)
 
 - [ ] Agent method tool use
 
