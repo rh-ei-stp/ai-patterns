@@ -38,12 +38,12 @@ public class AdventureRoute extends RouteBuilder {
     public void configure() throws Exception {
 
         // @formatter:off
-        from("amqp:queue:players/input?username=artemis&password=artemis")
+        from("amqp:queue:players/input")
             .routeId("adventure-listener")
             .to("log:adventure-listener?showHeaders=true")
             .to("direct:adventure-agent")
             .to("log:adventure-listener?showHeaders=true")
-            .toD("amqp:queue:players/${header.playerId}/response?username=artemis&password=artemis");
+            .toD("amqp:queue:players/${header.playerId}/response");
 
         from("direct:adventure-agent")
             .routeId("adventure-agent")

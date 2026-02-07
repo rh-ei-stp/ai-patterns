@@ -15,8 +15,8 @@ public class PlayerRoute extends RouteBuilder {
         from("direct:playerInput")
             .routeId("handlePlayerInput")
             .to("log:handlePlayerInput?showHeaders=true")
-            .to("amqp:queue:players/input?username=artemis&password=artemis&requestTimeout=60000&disableReplyTo=true")
-            .pollEnrich().simple("amqp:queue:players/${header.playerId}/response?username=artemis&password=artemis&requestTimeout=60000");
+            .to("amqp:queue:players/input?requestTimeout=60000&disableReplyTo=true")
+            .pollEnrich().simple("amqp:queue:players/${header.playerId}/response?requestTimeout=60000");
 
     }
 
