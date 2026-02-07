@@ -21,7 +21,6 @@ public class AdventureRoute extends RouteBuilder {
                 .temperature(0.0)
                 .logRequests(false)
                 .logResponses(false)
-                // .modelName("granite4:1b")
                 .modelName("granite4:1b")
                 .build();
 
