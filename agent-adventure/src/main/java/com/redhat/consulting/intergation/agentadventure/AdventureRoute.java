@@ -6,6 +6,7 @@ import org.apache.camel.component.langchain4j.agent.api.Agent;
 import org.apache.camel.component.langchain4j.agent.api.AgentConfiguration;
 import org.apache.camel.component.langchain4j.agent.api.AgentWithoutMemory;
 import org.apache.camel.component.langchain4j.agent.api.Headers;
+import org.eclipse.microprofile.config.ConfigProvider;
 
 import dev.langchain4j.model.chat.ChatModel;
 import dev.langchain4j.model.ollama.OllamaChatModel;
@@ -14,11 +15,14 @@ public class AdventureRoute extends RouteBuilder {
 
     @BindToRegistry("agent")
     public Agent configureAgent() {
+        String ollamaEndpoint = ConfigProvider.getConfig().getValue("langchain4j-ollama-dev-service.ollama.endpoint",
+                String.class);
 
         // TODO: externalize this configuration
         ChatModel ollamaModel = OllamaChatModel.builder()
-                .baseUrl("http://localhost:11434")
-                .temperature(0.0)
+                // .baseUrl("http://localhost:11434")
+                .baseUrl(ollamaEndpoint)
+                .temperature(0.1)
                 .logRequests(false)
                 .logResponses(false)
                 .modelName("granite4:1b")
