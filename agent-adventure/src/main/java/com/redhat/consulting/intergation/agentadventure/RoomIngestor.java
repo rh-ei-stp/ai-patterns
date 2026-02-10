@@ -14,12 +14,13 @@ import dev.langchain4j.model.embedding.EmbeddingModel;
 import dev.langchain4j.model.ollama.OllamaEmbeddingModel;
 import dev.langchain4j.rag.DefaultRetrievalAugmentor;
 import dev.langchain4j.rag.RetrievalAugmentor;
+import dev.langchain4j.rag.content.retriever.ContentRetriever;
 import dev.langchain4j.rag.content.retriever.EmbeddingStoreContentRetriever;
 import dev.langchain4j.store.embedding.EmbeddingStoreIngestor;
 import dev.langchain4j.store.embedding.inmemory.InMemoryEmbeddingStore;
 import io.quarkus.logging.Log;
 
-public class RoomAugmentor {
+public class RoomIngestor {
 
     // TODO: externalize
     final static String ROOM_KNOWLEDGE_BASE = """
@@ -54,7 +55,7 @@ public class RoomAugmentor {
             exits: great hall
             """;
 
-    public static RetrievalAugmentor build() {
+    public static ContentRetriever ingest() {
         Log.info("Ingesting rooms for RAG.");
         Document roomsDoc = Document.from(ROOM_KNOWLEDGE_BASE);
 
@@ -83,9 +84,12 @@ public class RoomAugmentor {
                 .maxResults(1)
                 .minScore(0.6)
                 .build(); 
-        RetrievalAugmentor augmentor = DefaultRetrievalAugmentor.builder()
-                .contentRetriever(contentRetriever)
-                .build();
-        return augmentor;
+        // RetrievalAugmentor augmentor = DefaultRetrievalAugmentor.builder()
+        //         .contentRetriever(contentRetriever)
+        //         .build();
+        // return augmentor;
+
+
+        return contentRetriever;
     }
 }

@@ -1,5 +1,7 @@
 package com.redhat.consulting.intergation.agentadventure;
 
+import java.util.List;
+
 import org.apache.camel.BindToRegistry;
 import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.component.langchain4j.agent.api.Agent;
@@ -21,15 +23,16 @@ public class AdventureRoute extends RouteBuilder {
         ChatModel ollamaModel = OllamaChatModel.builder()
                 .baseUrl(ollamaEndpoint)
                 .temperature(0.1)
-                .logRequests(false)
+                .logRequests(true)
                 .logResponses(false)
-                .modelName("granite4:1b")
+                // .modelName("granite4:1b")
+                .modelName("qwen3:1.7b")
                 .build();
 
         // Create agent configuration
         AgentConfiguration configuration = new AgentConfiguration()
                 .withChatModel(ollamaModel)
-                .withRetrievalAugmentor(RoomAugmentor.build());
+                .withCustomTools(List.of(new RoomTool(RoomIngestor.ingest())));
 
         // Create the agent
         Agent agent = new AgentWithoutMemory(configuration);
