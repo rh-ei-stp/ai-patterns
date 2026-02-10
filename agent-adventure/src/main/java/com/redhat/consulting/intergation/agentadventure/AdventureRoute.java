@@ -6,8 +6,6 @@ import org.apache.camel.component.langchain4j.agent.api.Agent;
 import org.apache.camel.component.langchain4j.agent.api.AgentConfiguration;
 import org.apache.camel.component.langchain4j.agent.api.AgentWithoutMemory;
 import org.apache.camel.component.langchain4j.agent.api.Headers;
-import org.eclipse.microprofile.config.ConfigProvider;
-
 import dev.langchain4j.model.chat.ChatModel;
 import dev.langchain4j.model.ollama.OllamaChatModel;
 
@@ -15,12 +13,12 @@ public class AdventureRoute extends RouteBuilder {
 
     @BindToRegistry("agent")
     public Agent configureAgent() {
-        String ollamaEndpoint = ConfigProvider.getConfig().getValue("langchain4j-ollama-dev-service.ollama.endpoint",
-                String.class);
+        // String ollamaEndpoint = ConfigProvider.getConfig().getValue("langchain4j-ollama-dev-service.ollama.endpoint",
+        //         String.class);
+        String ollamaEndpoint = "http://localhost:11434";
 
         // TODO: externalize this configuration
         ChatModel ollamaModel = OllamaChatModel.builder()
-                // .baseUrl("http://localhost:11434")
                 .baseUrl(ollamaEndpoint)
                 .temperature(0.1)
                 .logRequests(false)
@@ -30,7 +28,8 @@ public class AdventureRoute extends RouteBuilder {
 
         // Create agent configuration
         AgentConfiguration configuration = new AgentConfiguration()
-                .withChatModel(ollamaModel);
+                .withChatModel(ollamaModel)
+                .withRetrievalAugmentor(RoomAugmentor.build());
 
         // Create the agent
         Agent agent = new AgentWithoutMemory(configuration);
@@ -53,7 +52,7 @@ public class AdventureRoute extends RouteBuilder {
             // TODO: externalize all prompt messages
             .setHeader(Headers.SYSTEM_MESSAGE).simple("""
                 You are a text-based adventure set in a ruined castle.
-                Vividly describe the user's location and what is happening in the style of a fantasy writer.
+                Look up the user's location by name and vividly describe it in the style of a fantasy writer.
                 Limit descriptions to less than 50 words. 
                 """)
             .convertBodyTo(String.class)
