@@ -1,5 +1,7 @@
 package com.redhat.consulting.intergation.agentadventure;
 
+import java.util.List;
+
 import org.apache.camel.BindToRegistry;
 import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.component.langchain4j.agent.api.Agent;
@@ -17,20 +19,22 @@ public class AdventureRoute extends RouteBuilder {
     public Agent configureAgent() {
         String ollamaEndpoint = ConfigProvider.getConfig().getValue("langchain4j-ollama-dev-service.ollama.endpoint",
                 String.class);
+        // String ollamaEndpoint = "http://localhost:11434";
 
         // TODO: externalize this configuration
         ChatModel ollamaModel = OllamaChatModel.builder()
-                // .baseUrl("http://localhost:11434")
                 .baseUrl(ollamaEndpoint)
                 .temperature(0.1)
                 .logRequests(false)
                 .logResponses(false)
                 .modelName("granite4:1b")
+                // .modelName("qwen3:1.7b")
                 .build();
 
         // Create agent configuration
         AgentConfiguration configuration = new AgentConfiguration()
-                .withChatModel(ollamaModel);
+                .withChatModel(ollamaModel)
+                .withCustomTools(List.of(new RoomTool(RoomIngestor.ingest())));
 
         // Create the agent
         Agent agent = new AgentWithoutMemory(configuration);
@@ -53,7 +57,7 @@ public class AdventureRoute extends RouteBuilder {
             // TODO: externalize all prompt messages
             .setHeader(Headers.SYSTEM_MESSAGE).simple("""
                 You are a text-based adventure set in a ruined castle.
-                Vividly describe the user's location and what is happening in the style of a fantasy writer.
+                Look up the user's location by name and vividly describe it in the style of a fantasy writer.
                 Limit descriptions to less than 50 words. 
                 """)
             .convertBodyTo(String.class)
