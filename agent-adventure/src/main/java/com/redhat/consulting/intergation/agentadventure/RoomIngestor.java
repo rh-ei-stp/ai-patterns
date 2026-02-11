@@ -66,9 +66,9 @@ public class RoomIngestor {
 
 
         // TODO: abstract this so it can be deployed without ollama
-        // String ollamaEndpoint = ConfigProvider.getConfig().getValue("langchain4j-ollama-dev-service.ollama.endpoint",
-        //         String.class);
-        String ollamaEndpoint = "http://localhost:11434";
+        String ollamaEndpoint = ConfigProvider.getConfig().getValue("langchain4j-ollama-dev-service.ollama.endpoint",
+                String.class);
+        // String ollamaEndpoint = "http://localhost:11434";
         Log.info("ollamaEndpoint=" + ollamaEndpoint);
         EmbeddingModel embeddingModel = OllamaEmbeddingModel.builder()
                 .baseUrl(ollamaEndpoint)
@@ -77,18 +77,13 @@ public class RoomIngestor {
 
         List<Embedding> embeddings = embeddingModel.embedAll(segments).content();
         InMemoryEmbeddingStore<TextSegment> roomStore = new InMemoryEmbeddingStore<>();
-        roomStore.addAll(embeddings);
+        roomStore.addAll(embeddings, segments);
         EmbeddingStoreContentRetriever contentRetriever = EmbeddingStoreContentRetriever.builder()
                 .embeddingStore(roomStore)
                 .embeddingModel(embeddingModel)
                 .maxResults(1)
-                .minScore(0.6)
+                .minScore(0.8)
                 .build(); 
-        // RetrievalAugmentor augmentor = DefaultRetrievalAugmentor.builder()
-        //         .contentRetriever(contentRetriever)
-        //         .build();
-        // return augmentor;
-
 
         return contentRetriever;
     }
