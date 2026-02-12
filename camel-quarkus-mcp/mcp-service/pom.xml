@@ -3,7 +3,7 @@
     xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>org.example.project</groupId>
+    <groupId>com.redhat.consulting.integration.camel_quarkus_mcp</groupId>
     <artifactId>mcp-service</artifactId>
     <version>1.0-SNAPSHOT</version>
 
