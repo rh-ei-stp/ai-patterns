@@ -31,8 +31,6 @@ Visit the Dev UI page: http://localhost:8080/q/dev-ui/quarkus-mcp-server-http/to
 
 ### Call with an agent
 
-*WIP*
-
 ```sh
 cd mcp-client
 mvn quarkus:dev
