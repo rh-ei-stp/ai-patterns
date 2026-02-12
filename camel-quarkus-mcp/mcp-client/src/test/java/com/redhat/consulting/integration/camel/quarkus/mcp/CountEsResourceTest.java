@@ -8,6 +8,9 @@ import static org.hamcrest.CoreMatchers.containsString;
 
 @QuarkusTest
 class CountEsResourceTest {
+
+    // TODO: mock the AiLetterCounterService
+
     @Test
     void testCountEndpoint() {
         given()
