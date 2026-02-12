@@ -29,7 +29,7 @@ curl -X POST localhost:8080/camel/countEs -H "Content-Type: text/plain"  -d "Spl
 
 Visit the Dev UI page: http://localhost:8080/q/dev-ui/quarkus-mcp-server-http/tools
 
-### Call with an agent
+## Test `mcp-client`
 
 ```sh
 cd mcp-client
