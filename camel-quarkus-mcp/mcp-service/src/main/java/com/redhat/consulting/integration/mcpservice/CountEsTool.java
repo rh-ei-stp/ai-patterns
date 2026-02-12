@@ -8,8 +8,11 @@ import io.quarkiverse.mcp.server.Tool;
 import io.quarkiverse.mcp.server.ToolArg;
 import io.quarkiverse.mcp.server.ToolResponse;
 import io.quarkus.logging.Log;
+import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
+import jakarta.inject.Named;
 
+@Named("CountEsMcpTool")
 public class CountEsTool {
 
     @Inject
@@ -22,6 +25,8 @@ public class CountEsTool {
             String response = producer.requestBody("direct:countEs", word, String.class);
             return ToolResponse.success(response);
         } catch (CamelExecutionException e) {
+            Log.error(e);
+            e.printStackTrace();
             return ToolResponse.error(e.getMessage());
         }
     }
