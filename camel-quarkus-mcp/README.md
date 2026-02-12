@@ -12,7 +12,7 @@ The word "splendiferous" contains 4 'e' letters.
 
 ## Start `mcp-service`
 
-```sh
+```
 cd mcp-service
 mvn quarkus:dev
 ```
@@ -21,7 +21,7 @@ mvn quarkus:dev
 
 ### HTTP endpoint
 
-```sh
+```
 ❯ curl -X POST localhost:8080/camel/countEs -H "Content-Type: text/plain"  -d "Splendiferous"
 2
 ```
@@ -32,13 +32,13 @@ Visit the Dev UI page: http://localhost:8080/q/dev-ui/quarkus-mcp-server-http/to
 
 ## Test `mcp-client`
 
-```sh
+```
 cd mcp-client
 mvn quarkus:dev
 ```
 
 In a new terminal:
-```sh
+```
 ❯ curl localhost:8081/countEs/splendiferous
 There are 2 letter 'e's in the word splendiferous.
 ```
