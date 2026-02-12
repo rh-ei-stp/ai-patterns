@@ -12,13 +12,12 @@ import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
 
-@Named("CountEsMcpTool")
 public class CountEsTool {
 
     @Inject
     ProducerTemplate producer;
 
-    @Tool(description = "Count the number of the letter 'e' in a word.")
+    @Tool(name = "countEs", description = "Count the number of the letter 'e' in a word.")
     ToolResponse countEs(@ToolArg(description = "word") String word) {
         Log.info("MCP request to count 'e's in "+word);
         try {

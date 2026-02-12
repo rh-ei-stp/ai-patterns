@@ -4,17 +4,16 @@ import io.quarkus.test.junit.QuarkusTest;
 import org.junit.jupiter.api.Test;
 
 import static io.restassured.RestAssured.given;
-import static org.hamcrest.CoreMatchers.containsString;
+import static org.hamcrest.CoreMatchers.is;
 
 @QuarkusTest
-class CountEsResourceTest {
+class CountEsRestDslTest {
     @Test
     void testCountEndpoint() {
-        given()
-          .when().get("/countEs/splendiferous")
+        given().body("splendiferous")
+          .when().post("/camel/countEs")
           .then()
              .statusCode(200)
-             .body(containsString("2"));
+             .body(is("2"));
     }
-
 }

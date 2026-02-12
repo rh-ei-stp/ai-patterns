@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
@@ -42,7 +43,6 @@
     </dependencyManagement>
 
 
-
     <dependencies>
         <dependency>
             <groupId>org.apache.camel.quarkus</groupId>
@@ -57,18 +57,30 @@
             <artifactId>camel-quarkus-rest</artifactId>
         </dependency>
 
+        <!-- MCP Server -->
         <dependency>
             <groupId>io.quarkiverse.mcp</groupId>
             <artifactId>quarkus-mcp-server-http</artifactId>
             <version>1.10.0</version>
         </dependency>
-
+        <dependency>
+            <groupId>io.quarkiverse.mcp</groupId>
+            <artifactId>quarkus-mcp-server-test</artifactId>
+            <version>1.10.0</version>
+            <scope>test</scope>
+        </dependency>
 
         <dependency>
             <groupId>io.quarkus</groupId>
             <artifactId>quarkus-junit5</artifactId>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>io.rest-assured</groupId>
+            <artifactId>rest-assured</artifactId>
+            <scope>test</scope>
+        </dependency>
+
     </dependencies>
 
     <build>
@@ -118,7 +130,8 @@
                         </goals>
                         <configuration>
                             <systemPropertyVariables>
-                                <native.image.path>${project.build.directory}/${project.build.finalName}-runner</native.image.path>
+                                <native.image.path>
+                                    ${project.build.directory}/${project.build.finalName}-runner</native.image.path>
                                 <java.util.logging.manager>org.jboss.logmanager.LogManager</java.util.logging.manager>
                                 <maven.home>${maven.home}</maven.home>
                             </systemPropertyVariables>
@@ -171,13 +184,13 @@
                                 </goals>
                                 <configuration>
                                     <artifactItems>
-                                      <artifactItem>
-                                        <groupId>org.jolokia</groupId>
-                                        <artifactId>jolokia-agent-jvm</artifactId>
-                                        <version>2.3.0</version>
-                                        <type>jar</type>
-                                        <classifier>javaagent</classifier>
-                                      </artifactItem>
+                                        <artifactItem>
+                                            <groupId>org.jolokia</groupId>
+                                            <artifactId>jolokia-agent-jvm</artifactId>
+                                            <version>2.3.0</version>
+                                            <type>jar</type>
+                                            <classifier>javaagent</classifier>
+                                        </artifactItem>
                                     </artifactItems>
                                     <stripVersion>true</stripVersion>
                                 </configuration>
@@ -189,7 +202,10 @@
                         <artifactId>quarkus-maven-plugin</artifactId>
                         <version>${quarkus.platform.version}</version>
                         <configuration>
-                            <jvmArgs>-Dcamel.main.shutdownTimeout=30 -Dquarkus.camel.source-location-enabled=true -javaagent:target/dependency/jolokia-agent-jvm-javaagent.jar=port=7878,host=localhost</jvmArgs>
+                            <jvmArgs>
+                                -Dcamel.main.shutdownTimeout=30
+                                -Dquarkus.camel.source-location-enabled=true
+                                -javaagent:target/dependency/jolokia-agent-jvm-javaagent.jar=port=7878,host=localhost</jvmArgs>
                         </configuration>
                     </plugin>
                 </plugins>
