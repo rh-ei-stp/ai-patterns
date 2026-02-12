@@ -22,7 +22,8 @@ mvn quarkus:dev
 ### HTTP endpoint
 
 ```sh
-curl -X POST localhost:8080/camel/countEs -H "Content-Type: text/plain"  -d "Splendiferous"
+❯ curl -X POST localhost:8080/camel/countEs -H "Content-Type: text/plain"  -d "Splendiferous"
+2
 ```
 
 ### MCP Endpoint
@@ -38,5 +39,6 @@ mvn quarkus:dev
 
 In a new terminal:
 ```sh
-curl localhost:8081/countEs/splendiferous
+❯ curl localhost:8081/countEs/splendiferous
+There are 2 letter 'e's in the word splendiferous.
 ```
