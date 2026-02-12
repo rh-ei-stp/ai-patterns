@@ -14,7 +14,7 @@ The word "splendiferous" contains 4 'e' letters.
 
 ```sh
 cd mcp-service
-quarkus dev
+quarkus dev  # or mvn quarkus:dev
 ```
 
 ## Test `mcp-service`
