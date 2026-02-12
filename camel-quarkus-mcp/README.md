@@ -14,7 +14,7 @@ The word "splendiferous" contains 4 'e' letters.
 
 ```sh
 cd mcp-service
-quarkus dev  # or mvn quarkus:dev
+mvn quarkus:dev
 ```
 
 ## Test `mcp-service`
@@ -31,4 +31,14 @@ Visit the Dev UI page: http://localhost:8080/q/dev-ui/quarkus-mcp-server-http/to
 
 ### Call with an agent
 
-*not yet implemented*
+*WIP*
+
+```sh
+cd mcp-client
+mvn quarkus:dev
+```
+
+In a new terminal:
+```sh
+curl localhost:8081/countEs/splendiferous
+```
