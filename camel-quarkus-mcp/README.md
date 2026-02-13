@@ -19,7 +19,7 @@ mvn quarkus:dev
 
 ## Test `mcp-service`
 
-### HTTP endpoint
+### REST DSL endpoint
 
 ```
 ❯ curl -X POST localhost:8080/camel/countEs -H "Content-Type: text/plain"  -d "Splendiferous"
