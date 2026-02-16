@@ -12,8 +12,13 @@ import org.eclipse.microprofile.config.ConfigProvider;
 
 import dev.langchain4j.model.chat.ChatModel;
 import dev.langchain4j.model.ollama.OllamaChatModel;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Inject;
 
+@ApplicationScoped
 public class AdventureRoute extends RouteBuilder {
+
+    @Inject RoomTool roomTool;
 
     @BindToRegistry("agent")
     public Agent configureAgent() {
@@ -34,7 +39,7 @@ public class AdventureRoute extends RouteBuilder {
         // Create agent configuration
         AgentConfiguration configuration = new AgentConfiguration()
                 .withChatModel(ollamaModel)
-                .withCustomTools(List.of(new RoomTool(RoomIngestor.ingest())));
+                .withCustomTools(List.of(roomTool));
 
         // Create the agent
         Agent agent = new AgentWithoutMemory(configuration);

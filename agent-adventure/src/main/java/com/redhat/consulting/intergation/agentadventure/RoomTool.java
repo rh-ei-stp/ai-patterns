@@ -8,19 +8,18 @@ import dev.langchain4j.rag.content.Content;
 import dev.langchain4j.rag.content.retriever.ContentRetriever;
 import dev.langchain4j.rag.query.Query;
 import io.quarkus.logging.Log;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Inject;
 
+@ApplicationScoped
 public class RoomTool {
 
-    private final ContentRetriever contentRetriever;
-
-    RoomTool(ContentRetriever contentRetriever) {
-        this.contentRetriever = contentRetriever;
-    }
+    @Inject RoomRetriever roomRetriever;
 
     @Tool("Lookup the description of a room by its name.")
     public String lookup(String roomName) {
 
-        Content description = contentRetriever.retrieve(new Query(roomName))
+        Content description = roomRetriever.getContentRetriever().retrieve(new Query(roomName))
                 .stream().findFirst()
                 .orElse(Content.from("Could not find " + roomName));
 
