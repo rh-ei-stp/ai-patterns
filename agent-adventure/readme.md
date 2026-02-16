@@ -32,19 +32,45 @@ actor Player
 
 ## Usage 
 
-### Run an AMQP broker locally
+### Boot up and run Dev Services
 
-Dev Services doesn't work yet for AMQP. See `todo.md`.
+Dev Services are enabled for an AMQP broker and LLM server. 
+
+```
+quarkus dev
+```
+
+### Enter prompts.
+
+Right now `curl` is the client with which the player interacts. A more comlex client may exist in the future.
+
+```
+curl -X POST localhost:8080/camel/player/player01 -H "Content-Type: text/plain" -d "I enter the castle"
+```
 
 
-To boot up an ActiveMQ Artemis instance with Podman:
+### Integration Testing
+
+**TODO**: This requires updates to the configuration. 
+
+
+To run without Dev Services and outside of dev mode, you can package and run the Quarkus service.
+
+```
+mvn clean package
+java -jar target/quarkus-app/quarkus-run.jar
+```
+
+
+#### Run an AMQP broker locally
+
 ```sh
 podman run --detach --name artemis -p 61616:61616 -p 8161:8161 -p 5672:5672 --rm apache/activemq-artemis:latest-alpine
 ```
 
 Can monitor broker at http://localhost:8161/console/login
 
-### Run Ollama locally
+#### Run Ollama locally
 
 ```
 podman run -d -v ollama:/root/.ollama -p 11434:11434 --name ollama ollama/ollama
@@ -60,11 +86,7 @@ ollama run granite4:1b
 ```
 
 
-### Enter prompts.
 
-```
-curl -X POST localhost:8080/camel/player/player01 -H "Content-Type: text/plain" -d "I enter the castle"
-```
 
 ---
 
