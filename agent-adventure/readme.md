@@ -1,5 +1,25 @@
 # AI Agent Adventure
 
+## Architecture
+
+```mermaid
+sequenceDiagram
+actor Player
+    Player->>+Client: prompt
+    Client->>+REST DSL:prompt
+    participant Broker@{ "type" : "queue" }
+    REST DSL->>+Broker: players/{player_id}/input
+    participant AA as adventure-agent route (calls model)
+    Broker->>+AA: input
+    AA<<->>Tools: RAG
+    AA<<->>Tools: Combat Agent
+    AA<<->>Tools: MCP
+    AA->>-Broker:players/{player_id}/response
+    Broker->>-REST DSL: response
+    REST DSL->>-Client: response
+    Client->>-Player:
+```
+
 ## Usage 
 
 ### Run an AMQP broker locally
