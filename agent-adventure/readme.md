@@ -9,11 +9,21 @@ actor Player
     Client->>+REST DSL:prompt
     participant Broker@{ "type" : "queue" }
     REST DSL->>+Broker: players/{player_id}/input
-    participant AA as adventure-agent route (calls model)
+    participant AA as adventure-agent route
     Broker->>+AA: input
+
+    box transparent
+    participant AA
+    participant Tools
+    participant LLM
+    end
     AA<<->>Tools: RAG
     AA<<->>Tools: Combat Agent
     AA<<->>Tools: MCP
+    AA->>+LLM:
+    LLM->>-AA:
+    
+
     AA->>-Broker:players/{player_id}/response
     Broker->>-REST DSL: response
     REST DSL->>-Client: response
