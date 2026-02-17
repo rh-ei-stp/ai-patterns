@@ -44,7 +44,7 @@ public class DiceRollerTools {
     }
 
     @Tool(description = """
-        Roll dice to get a number between the lower bound and the upper bound.
+        Roll dice between lower bound at X and upper bound at Y and return a number.
         """)
     public ToolResponse rollSimple(
         @ToolArg(description = "lower bound", defaultValue = "1") Integer lower,
