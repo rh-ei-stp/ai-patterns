@@ -4,8 +4,10 @@ import java.util.Random;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import io.quarkiverse.mcp.server.TextContent;
 import io.quarkiverse.mcp.server.Tool;
 import io.quarkiverse.mcp.server.ToolArg;
+import io.quarkiverse.mcp.server.ToolResponse;
 import io.quarkus.logging.Log;
 
 public class DiceRollerTools {
@@ -19,11 +21,13 @@ public class DiceRollerTools {
         Y is the 'size' of the dice from 1 to Y 
         and Z is a modifier to add or subtract from the total. 
         """)
-    @Deprecated(since="Not tested, probably buggy.")
-    public String rollExpression(@ToolArg String diceExpression) {
+    public ToolResponse rollExpression(@ToolArg String diceExpression) {
         Log.info("Tool rollExpression. diceExpression="+diceExpression);
 
         Matcher matcher = dicePattern.matcher(diceExpression);
+        if ( ! matcher.matches()) {
+            return ToolResponse.error("Invalid dice expression: "+diceExpression);
+        }
         int numDice = Integer.valueOf(matcher.group(1));
         int sizeDice = Integer.valueOf(matcher.group(2));
         int modifier = matcher.groupCount() == 3 ? Integer.valueOf(matcher.group(3)) : 0;
@@ -36,13 +40,13 @@ public class DiceRollerTools {
         }
         result += modifier;
 
-        return String.valueOf(result);
+        return ToolResponse.success(new TextContent(String.valueOf(result)));
     }
 
     @Tool(description = """
         Roll dice to get a number between the lower bound and the upper bound.
         """)
-    public Integer rollSimple(
+    public ToolResponse rollSimple(
         @ToolArg(description = "lower bound", defaultValue = "1") Integer lower,
         @ToolArg(description = "upper bound") Integer upper){
 
@@ -50,7 +54,7 @@ public class DiceRollerTools {
         int result = dice.nextInt(lower, upper+1);
         
         Log.info("rollSimple result="+result);
-        return result;
+        return ToolResponse.success(new TextContent(String.valueOf(result)));
     }
     
 }
