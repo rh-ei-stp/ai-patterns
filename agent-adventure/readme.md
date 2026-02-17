@@ -48,6 +48,14 @@ Right now `curl` is the client with which the player interacts. A more comlex cl
 curl -X POST localhost:8080/camel/player/player01 -H "Content-Type: text/plain" -d "I enter the castle"
 ```
 
+### MCP Support
+
+Running FastSD CPU locally from a container.
+
+```
+podman run --name fastsd_cpu -p 7860:7860 --volume ./cache:/root/.cache/huggingface --volume ./configs:/usr/src/app/configs --volume ./results:/usr/src/app/results   docker.io/focusbreathing/fastsd-cpu:1.0.0-beta
+```
+
 
 ### Integration Testing
 
