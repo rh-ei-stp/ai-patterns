@@ -18,8 +18,9 @@ import dev.langchain4j.rag.content.retriever.ContentRetriever;
 import dev.langchain4j.rag.content.retriever.EmbeddingStoreContentRetriever;
 import dev.langchain4j.store.embedding.inmemory.InMemoryEmbeddingStore;
 import io.quarkus.logging.Log;
-import jakarta.annotation.PostConstruct;
+import io.quarkus.runtime.StartupEvent;
 import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.enterprise.event.Observes;
 
 @ApplicationScoped
 public class RoomRetriever {
@@ -32,8 +33,7 @@ public class RoomRetriever {
         return contentRetriever;
     }
 
-    @PostConstruct
-    void ingest() {
+    void ingest(@Observes StartupEvent event) {
         Log.info("Ingesting rooms for RAG from " + ROOMS_FILENAME);
         Document roomsDoc = loadDocument(ROOMS_FILENAME);
 
