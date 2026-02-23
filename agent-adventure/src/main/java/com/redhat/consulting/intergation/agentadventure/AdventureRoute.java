@@ -1,5 +1,6 @@
 package com.redhat.consulting.intergation.agentadventure;
 
+import java.time.Duration;
 import java.util.List;
 
 import org.apache.camel.BindToRegistry;
@@ -16,7 +17,7 @@ import dev.langchain4j.mcp.client.transport.McpTransport;
 import dev.langchain4j.mcp.client.transport.http.HttpMcpTransport;
 import dev.langchain4j.mcp.client.transport.http.StreamableHttpMcpTransport;
 import dev.langchain4j.model.chat.ChatModel;
-// import dev.langchain4j.model.ollama.OllamaChatModel;
+import dev.langchain4j.model.ollama.OllamaChatModel;
 import dev.langchain4j.model.openai.OpenAiChatModel;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
@@ -27,28 +28,11 @@ public class AdventureRoute extends RouteBuilder {
     @Inject
     RoomTool roomTool;
 
+    @Inject
+    OpenAiChatModel chatmodel;
+
     @BindToRegistry("agent")
     public Agent configureAgent() {
-        // String ollamaEndpoint = ConfigProvider.getConfig().getValue("langchain4j-ollama-dev-service.ollama.endpoint",
-        //         String.class);
-        // String ollamaEndpoint = "http://localhost:11434";
-
-        // TODO: externalize this configuration
-        // ChatModel ollamaModel = OllamaChatModel.builder()
-        //         .baseUrl(ollamaEndpoint)
-        //         .temperature(0.1)
-        //         .logRequests(false)
-        //         .logResponses(false)
-        //         .modelName("granite4:1b")
-        //         // .modelName("qwen3:1.7b")
-        //         .build();
-
-        ChatModel openAiModel = OpenAiChatModel.builder()
-                .apiKey("demo")
-                .baseUrl("http://langchain4j.dev/demo/openai/v1")
-                .modelName("gpt-4o-mini").temperature(0.3)
-                // .timeout(ofSeconds(3000))
-                .build();
 
         // TODO: externalize this config
         McpTransport diceRollerTransport = new StreamableHttpMcpTransport.Builder()
@@ -60,12 +44,15 @@ public class AdventureRoute extends RouteBuilder {
         McpClient diceRollerClient = new DefaultMcpClient.Builder()
                 .clientName("dice_roller")
                 .transport(diceRollerTransport)
+                .autoHealthCheck(false)
+                .autoHealthCheckInterval(Duration.ofMinutes(5L))
                 .build();
 
         // Create agent configuration
         AgentConfiguration configuration = new AgentConfiguration()
+                .withChatModel(chatmodel)
                 // .withChatModel(ollamaModel)
-                .withChatModel(openAiModel)
+                // .withChatModel(openAiModel)
                 .withCustomTools(List.of(roomTool))
                 .withMcpClient(diceRollerClient);
 
@@ -88,17 +75,25 @@ public class AdventureRoute extends RouteBuilder {
         from("direct:adventure-agent")
             .routeId("adventure-agent")
             // TODO: externalize all prompt messages
-            .setHeader(Headers.SYSTEM_MESSAGE).simple("""
-                You are a text-based adventure set in a ruined castle.
-                Look up the user's location by name and vividly describe it in the style of a fantasy writer.
-                Use the MCP client dice_roller to rollSimple to get a number between 1 and 100. If the number is 1, then include a skeleton in the room description.
-                Limit descriptions to less than 50 words. 
-                """)
             // .setHeader(Headers.SYSTEM_MESSAGE).simple("""
             //     You are a text-based adventure set in a ruined castle.
-            //     Use the MCP client dice_roller to call rollSimple to get a number between 1 and 2. If the number is 2, then include a skeleton in the room description.
-            //     Roll dice with lower bound at 1 and upper bound at 2. If it returns 2, include a skeleton in the room description.
+            //     Use the MCP client dice_roller to rollSimple to get a number between 1 and 1. If the number is 1, then include a skeleton in the room description.
             //     Look up the user's location by name and vividly describe it in the style of a fantasy writer.
+            //     Limit descriptions to less than 50 words. 
+            //     """)
+
+//          Use the MCP client dice_roller to call rollSimple to get a number between 1 and 2. If the number is 2, then include a skeleton in the room description.
+
+            .setHeader(Headers.SYSTEM_MESSAGE).simple("""
+                You are a text-based adventure set in a ruined castle.
+                Describe the current location by looking it up by name and use dice_roller rollSimple with lower bound of 1 and upper bound of 1 and if it returns 1 then include a skeleton in the room description. 
+                Limit descriptions to less than 50 words. 
+                """)
+
+            // .setHeader(Headers.SYSTEM_MESSAGE).simple("""
+            //     You are a text-based adventure set in a ruined castle.
+            //     Look up the user's location by name and vividly describe it in the style of a fantasy writer.
+            //     Roll dice with lower bound at 1 and upper bound at 1. If it returns 1, include a skeleton in the description.
             //     Limit descriptions to less than 50 words. 
             //     """)
             // .setHeader(Headers.SYSTEM_MESSAGE).simple("""

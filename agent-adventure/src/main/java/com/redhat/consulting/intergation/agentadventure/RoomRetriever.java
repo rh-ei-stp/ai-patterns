@@ -21,9 +21,12 @@ import io.quarkus.logging.Log;
 import io.quarkus.runtime.StartupEvent;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.enterprise.event.Observes;
+import jakarta.inject.Inject;
 
 @ApplicationScoped
 public class RoomRetriever {
+
+    @Inject EmbeddingModel embeddingModel;
 
     static final String ROOMS_FILENAME = "rooms.txt";
 
@@ -41,10 +44,10 @@ public class RoomRetriever {
         List<TextSegment> segments = splitter.split(roomsDoc);
         Log.info("segments=" + segments);
 
-        EmbeddingModel embeddingModel = OllamaEmbeddingModel.builder()
-                .baseUrl(getBaseUrl())
-                .modelName("granite-embedding:30m")
-                .build();
+        // EmbeddingModel embeddingModel = OllamaEmbeddingModel.builder()
+        //         .baseUrl("http://localhost:")
+        //         .modelName("granite-embedding:30m")
+        //         .build();
 
         List<Embedding> embeddings = embeddingModel.embedAll(segments).content();
         InMemoryEmbeddingStore<TextSegment> roomStore = new InMemoryEmbeddingStore<>();
@@ -62,12 +65,12 @@ public class RoomRetriever {
     // TODO: Abstract this so it can be deployed without Ollama.
     // TODO: Currently this is a workaround for not being able to set the Ollama Dev Services container to a fixed port.
     // TODO: move to a shared utility/config class
-    private static String getBaseUrl() {
-        String ollamaEndpoint = ConfigProvider.getConfig().getValue("langchain4j-ollama-dev-service.ollama.endpoint",
-                String.class);
-        Log.info("ollamaEndpoint=" + ollamaEndpoint);
-        return ollamaEndpoint;
-    }
+    // private static String getBaseUrl() {
+    //     String ollamaEndpoint = ConfigProvider.getConfig().getValue("langchain4j-ollama-dev-service.ollama.endpoint",
+    //             String.class);
+    //     Log.info("ollamaEndpoint=" + ollamaEndpoint);
+    //     return ollamaEndpoint;
+    // }
 
     private static Document loadDocument(String filename) {
         try {

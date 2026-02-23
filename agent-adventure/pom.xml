@@ -95,10 +95,11 @@
             <artifactId>quarkus-vertx-http</artifactId>
         </dependency>
 
-
         <dependency>
             <groupId>io.quarkiverse.langchain4j</groupId>
             <artifactId>quarkus-langchain4j-ollama</artifactId>
+            <!-- required to be greater than 1.6.0 for fix to allow static Dev Services port -->
+            <version>1.7.2</version>
         </dependency>
 
          <dependency>
